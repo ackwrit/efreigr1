@@ -1,4 +1,5 @@
 //gere toutes les opérations concernant la bdd Firebase
+import 'package:eferei2023gr109/model/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +13,7 @@ class FiresbaseHelper{
 
   //méthdes
   //inscription un utilisateur
-  resgiter(mail,mdp,nom,prenom) async{
+  Future <MyUser>resgiter(mail,mdp,nom,prenom) async{
     UserCredential credential = await auth.createUserWithEmailAndPassword(email: mail, password: mdp);
     String uid = credential.user!.uid;
     Map<String,dynamic> map = {
@@ -22,18 +23,28 @@ class FiresbaseHelper{
       "FAVORIS":[]
     };
     adddUser(uid, map);
+    return getUser(uid);
+
 
 
 
 
   }
 
+  //récupérer notre model
+  Future <MyUser> getUser(String uid) async {
+     DocumentSnapshot snapshot = await cloudUsers.doc(uid).get();
+     return MyUser(snapshot);
+
+  }
+
 
 
 //connexion d'unutilisateur
-  connect(mail,mdp){
-    auth.signInWithEmailAndPassword(email: mail, password: mdp);
-
+  Future <MyUser>connect(mail,mdp)async {
+    UserCredential credential = await auth.signInWithEmailAndPassword(email: mail, password: mdp);
+    String uid = credential.user!.uid;
+    return getUser(uid);
   }
 
 

@@ -1,9 +1,18 @@
+import 'package:eferei2023gr109/View/Dashboard.dart';
 import 'package:eferei2023gr109/View/loading.dart';
 import 'package:eferei2023gr109/View/my_background.dart';
+import 'package:eferei2023gr109/constant.dart';
+import 'package:eferei2023gr109/controller/firebase_helper.dart';
 import 'package:eferei2023gr109/controller/my_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -38,7 +47,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  TextEditingController password = TextEditingController();
+  TextEditingController nom = TextEditingController();
+  TextEditingController prenom = TextEditingController();
+  TextEditingController mail = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MyAnimation(
                       duree: 1,
                       child: TextField(
+                        controller: nom,
                           decoration : InputDecoration(
                               prefixIcon : const Icon(Icons.person),
                               hintText:"Entrer votre nom",
@@ -83,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MyAnimation(
                       duree: 2,
                       child: TextField(
+                        controller: prenom,
                           decoration : InputDecoration(
                               prefixIcon : const Icon(Icons.person),
                               hintText:"Entrer votre prénom",
@@ -101,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MyAnimation(
                       duree: 3,
                       child: TextField(
+                        controller: mail,
                           decoration : InputDecoration(
                               prefixIcon : const Icon(Icons.mail,color:Colors.purple),
                               hintText:"Entrer votre mail",
@@ -117,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MyAnimation(
                       duree: 4,
                       child: TextField(
+                        controller: password,
 
 
 
@@ -139,6 +155,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
 
                           onPressed: (){
+                            FiresbaseHelper().resgiter(mail.text, password.text, nom.text, prenom.text).then((value){
+                              //fonction a réussi
+                              setState(() {
+                                moi = value;
+                              });
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context){
+                                    return const MyDashBoard();
+                                  }
+                              ));
+
+                            }).catchError((error){
+                              //afficher un popUp
+                              print(error.toString());
+                            });
+
 
 
                           },

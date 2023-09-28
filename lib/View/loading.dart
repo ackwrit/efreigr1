@@ -14,9 +14,9 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     return PageView(
       children: [
-        Lottie.asset("01.json"),
-        Lottie.asset("02.json"),
-        Lottie.asset("03.json"),
+        Lottie.asset("assets/01.json"),
+        Lottie.asset("assets/02.json"),
+        Lottie.asset("assets/03.json"),
         MyHomePage(title: "coucou")
 
       ],
