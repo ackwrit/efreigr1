@@ -183,6 +183,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       duree: 6,
                       child: ElevatedButton(
                           onPressed: (){
+                            FiresbaseHelper().connect(mail.text, password.text).then((value){
+                              //fonction a réussi
+                              setState(() {
+                                moi = value;
+                              });
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context){
+                                    return const MyDashBoard();
+                                  }
+                              ));
+
+                            }).catchError((error){
+                              //afficher un popUp
+                              print(error.toString());
+                            });
 
                           },
                           child: Text("Connexion")

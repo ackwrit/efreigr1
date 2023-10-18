@@ -1,3 +1,4 @@
+import 'package:eferei2023gr109/View/my_background.dart';
 import 'package:eferei2023gr109/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,16 @@ class _MyDashBoardState extends State<MyDashBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bonjour ${moi.prenom} ${moi.nom}"),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+
+      ),
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          MyBackground(),
+          Text("coucou")
+        ],
       ),
     );
   }
