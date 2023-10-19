@@ -1,4 +1,6 @@
 //gere toutes les opérations concernant la bdd Firebase
+import 'dart:typed_data';
+
 import 'package:eferei2023gr109/model/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -55,6 +57,13 @@ adddUser(String uid,Map<String,dynamic> data){
 
 updateUser(String uid, Map<String,dynamic> data){
     cloudUsers.doc(uid).update(data);
+}
+
+Future<String>storageFile({required String dossier,required String uid, required String nameFile, required Uint8List dataFile}) async {
+    TaskSnapshot snapshot = await storage.ref("$dossier/$uid/$nameFile").putData(dataFile);
+    String url = await snapshot.ref.getDownloadURL();
+    return url;
+
 }
 
 

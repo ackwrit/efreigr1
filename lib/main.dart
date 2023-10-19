@@ -4,6 +4,7 @@ import 'package:eferei2023gr109/View/my_background.dart';
 import 'package:eferei2023gr109/constant.dart';
 import 'package:eferei2023gr109/controller/firebase_helper.dart';
 import 'package:eferei2023gr109/controller/my_animation.dart';
+import 'package:eferei2023gr109/controller/my_permission_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -13,6 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  MyPermissionPhoto().init();
   runApp(const MyApp());
 }
 

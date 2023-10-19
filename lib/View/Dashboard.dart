@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:eferei2023gr109/View/all_personn.dart';
 import 'package:eferei2023gr109/View/my_background.dart';
+import 'package:eferei2023gr109/View/my_map.dart';
 import 'package:eferei2023gr109/constant.dart';
 import 'package:eferei2023gr109/controller/firebase_helper.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class MyDashBoard extends StatefulWidget {
@@ -14,9 +19,82 @@ class _MyDashBoardState extends State<MyDashBoard> {
   //variable
   bool changedPrenom = false;
   TextEditingController prenom = TextEditingController();
+  String? nameImage;
+  Uint8List? byteImage;
+  int currentIndexTapped = 0;
+
+
+  //méthode
+  popImage(){
+    showDialog(
+      barrierDismissible: false,
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            title: const Text("Souhaitez vous enregistrer cette image ?"),
+            content: Image.memory(byteImage!),
+            actions: [
+              TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: const Text("NON")
+              ),
+              TextButton(
+                  onPressed: (){
+                    //plusieurs opérations
+                    FiresbaseHelper().storageFile(dossier: "IMAGES", uid: moi.uid, nameFile: nameImage!, dataFile: byteImage!).then((value){
+                      setState(() {
+                        moi.photo = value;
+                      });
+                      Map<String,dynamic> data = {
+                        "PHOTO":moi.photo
+                      };
+                      FiresbaseHelper().updateUser(moi.uid, data);
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OUI")
+              )
+            ],
+          );
+        }
+    );
+  }
+  pickImage() async{
+    FilePickerResult? resultat = await FilePicker.platform.pickFiles(
+      withData: true,
+      type: FileType.image
+    );
+    if(resultat != null){
+      nameImage = resultat.files.first.name;
+      byteImage = resultat.files.first.bytes;
+      popImage();
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndexTapped,
+        onTap: (value){
+          setState(() {
+            currentIndexTapped = value;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+            label:"Personnes"
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.map),
+              label:"Cartes"
+          ),
+
+        ],
+      ),
       drawer: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width * 0.66,
@@ -27,9 +105,14 @@ class _MyDashBoardState extends State<MyDashBoard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 90,
-              backgroundImage:NetworkImage(moi.photo??imageDefault),
+            GestureDetector(
+              onTap: (){
+                pickImage();
+              },
+              child: CircleAvatar(
+                radius: 90,
+                backgroundImage:NetworkImage(moi.photo??imageDefault),
+              ),
             ),
 
             (changedPrenom)?
@@ -82,10 +165,18 @@ class _MyDashBoardState extends State<MyDashBoard> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          MyBackground(),
-          Center(child: Text("coucou"))
+          const MyBackground(),
+          bodyPage(),
         ],
       ),
     );
+  }
+
+  Widget bodyPage(){
+    switch(currentIndexTapped){
+      case 0 : return const AllPersonn();
+      case 1: return const MyMap();
+      default: return const Text("Impossible");
+    }
   }
 }
