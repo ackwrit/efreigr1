@@ -29,7 +29,7 @@ class MyUser {
     favoriteColor = map["FAVORISCOLOR"];
     birthday = map["BIRTHDAY"]?? DateTime.now();
     favoris = map["FAVORIS"];
-    photo = map["PHOTO"]??"https://imageandco.online/wp-content/uploads/2020/12/Manga.jpg";
+    photo = map["PHOTO"]??imageDefault;
 
   }
 
