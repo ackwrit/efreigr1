@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:eferei2023gr109/View/all_personn.dart';
 import 'package:eferei2023gr109/View/my_background.dart';
+import 'package:eferei2023gr109/View/my_check_map.dart';
 import 'package:eferei2023gr109/View/my_map.dart';
 import 'package:eferei2023gr109/constant.dart';
 import 'package:eferei2023gr109/controller/firebase_helper.dart';
@@ -175,7 +176,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
   Widget bodyPage(){
     switch(currentIndexTapped){
       case 0 : return const AllPersonn();
-      case 1: return const MyMap();
+      case 1: return const MyCheckMap();
       default: return const Text("Impossible");
     }
   }
