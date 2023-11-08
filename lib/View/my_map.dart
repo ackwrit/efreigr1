@@ -29,25 +29,47 @@ class _MyMapState extends State<MyMap> {
 
 
 
-
-  init() {
-    //test
+  init(){
+    //initilialiser la caméra
+    initCamera = CameraPosition(target: LatLng(widget.gps.latitude,widget.gps.longitude),zoom: 14);
+//enregistrer les coordonnées dans la base de donnée
     Map<String,dynamic> data = {
-      'GPS': GeoPoint(widget.gps.latitude, widget.gps.longitude)
+      "GPS":GeoPoint(widget.gps.latitude,widget.gps.longitude)
     };
     FiresbaseHelper().updateUser(moi.uid, data);
-    //récupérattion des marekers
-    //
+    // récuperer tous les Markers
+    FiresbaseHelper().cloudUsers.snapshots().listen((event) {
+      List documents = event.docs;
+      for(int index =0; index<documents.length;index++){
 
-    initCamera = CameraPosition(target: LatLng(widget.gps.latitude,widget.gps.longitude),zoom: 14);
-  }
+        MyUser other = MyUser(documents[index]);
+        print(other.mail);
+
+
+          setState(() {
+            allMarkers.add(
+              Marker(
+                  markerId: MarkerId(other.uid),
+                position: LatLng(other.gps!.latitude, other.gps!.longitude),
+                infoWindow: InfoWindow(
+                  title: other.mail,
+                )
+              )
+            );
+          });
+
+
+      }
+    });
+
+}
+
 
   @override
   void initState() {
     // TODO: implement initState
-    init();
-
     super.initState();
+    init();
   }
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ class MyUser {
   DateTime? birthday;
   late List favoris;
   String? photo;
-  Position? gps;
+  GeoPoint? gps;
 
 
   //constructeur
@@ -32,8 +32,8 @@ class MyUser {
     birthday = map["BIRTHDAY"]?? DateTime.now();
     favoris = map["FAVORIS"];
     photo = map["PHOTO"]??imageDefault;
-    GeoPoint? geoPoint = map["GPS"]?? GeoPoint(0, 0);
-    gps = Position(longitude: geoPoint!.longitude, latitude: geoPoint.latitude, timestamp: DateTime.now(), accuracy: 0, altitude: 0, altitudeAccuracy: 0, heading: 0, headingAccuracy: 0, speed: 0, speedAccuracy: 0);
+    gps = map["GPS"]?? GeoPoint(0, 0);
+
 
 
   }
